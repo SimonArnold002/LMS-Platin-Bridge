@@ -1,0 +1,16 @@
+<extensions>
+  <details>
+    <title lang="EN">Platin Hub Bridge For Lyrion Music Server</title>
+  </details>
+  <plugins>
+    <plugin name="PlatinBridge" version="0.2.10" minTarget="8.0.0" maxTarget="*">
+      <title lang="EN">Platin Hub Bridge</title>
+      <desc lang="EN">Presents the Platin Stereo Hub HT as a native Lyrion player over UPnP. It offers Lyrion the formats the Hub plays and passes the audio through untouched, leaving DSP and ReplayGain to SqueezeDSP; the player's power button switches the Hub, and the Hub's own remote is followed. Bespoke to one renderer, and built so that nothing the Hub reports can ever start Lyrion playing.</desc>
+      <url>https://raw.githubusercontent.com/SimonArnold002/LMS-Platin-Bridge/dev/PlatinBridge.zip</url>
+      <icon>https://raw.githubusercontent.com/SimonArnold002/LMS-Platin-Bridge/main/PlatinBridge/HTML/EN/plugins/PlatinBridge/html/images/PlatinBridgeIcon.png</icon>
+      <creator>CrystalGipsy</creator>
+      <email></email>
+      <sha>a358661c5aac0175d62e09834abd057b6a7acc5e</sha>
+    </plugin>
+  </plugins>
+</extensions>

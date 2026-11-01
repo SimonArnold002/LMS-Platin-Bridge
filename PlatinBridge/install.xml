@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension>
+    <name>PLUGIN_PLATIN_BRIDGE</name>
+    <module>Plugins::PlatinBridge::Plugin</module>
+    <version>0.2.10</version>
+    <description>PLUGIN_PLATIN_BRIDGE_DESC</description>
+    <creator>CrystalGipsy</creator>
+    <email></email>
+    <homepageURL>https://github.com/SimonArnold002/LMS-Platin-Bridge</homepageURL>
+    <icon>plugins/PlatinBridge/html/images/PlatinBridgeIcon_svg.png</icon>
+    <defaultState>enabled</defaultState>
+    <type>2</type>
+    <!-- type=2 means extension -->
+    <targetApplication>
+        <id>SlimServer</id>
+        <minVersion>8.0</minVersion>
+        <maxVersion>9.*</maxVersion>
+    </targetApplication>
+</extension>
