@@ -1,0 +1,25 @@
+[% PROCESS settings/header.html %]
+
+[% WRAPPER setting title="PLUGIN_PLATIN_STATUS" desc="PLUGIN_PLATIN_STATUS_DESC" %]
+	[% IF platin_none %]
+		<p>[% "PLUGIN_PLATIN_NOTFOUND" | string %]</p>
+	[% ELSE %]
+		[% FOREACH d = platin_devices %]
+		<p>
+			<b>[% d.name | html %]</b>[% IF d.model %] - [% d.model | html %][% END %]<br />
+			[% "PLUGIN_PLATIN_ADDRESS" | string %]: [% d.address | html %]<br />
+			[% "PLUGIN_PLATIN_STATE" | string %]:
+				[% IF d.ready %][% "PLUGIN_PLATIN_CONNECTED" | string %][% ELSE %][% "PLUGIN_PLATIN_DISCONNECTED" | string %][% END %]<br />
+			[% "PLUGIN_PLATIN_POWER" | string %]:
+				[% IF !d.control %][% "PLUGIN_PLATIN_NOCONTROL" | string %][% ELSIF d.power == 'on' %][% "PLUGIN_PLATIN_ON" | string %][% ELSIF d.power == 'off' %][% "PLUGIN_PLATIN_OFF" | string %][% ELSE %]?[% END %][% IF d.source %], [% d.source | html %][% END %]<br />
+			[% "PLUGIN_PLATIN_GAPLESS" | string %]:
+				[% IF d.gapless %][% "PLUGIN_PLATIN_YES" | string %][% ELSE %][% "PLUGIN_PLATIN_NO" | string %][% END %]<br />
+			[% IF d.volume %][% "PLUGIN_PLATIN_VOLRANGE" | string %]: [% d.volume | html %]<br />[% END %]
+			[% "PLUGIN_PLATIN_FORMATS" | string %]: [% d.formats | html %][% IF d.maxrate %], [% "PLUGIN_PLATIN_UPTO" | string %] [% d.maxrate | html %] Hz[% END %]<br />
+			<small>[% d.udn | html %]</small>
+		</p>
+		[% END %]
+	[% END %]
+[% END %]
+
+[% PROCESS settings/footer.html %]

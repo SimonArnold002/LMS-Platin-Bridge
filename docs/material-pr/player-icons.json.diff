@@ -1,0 +1,12 @@
+--- a/MaterialSkin/HTML/material/html/misc/player-icons.json
++++ b/MaterialSkin/HTML/material/html/misc/player-icons.json
+@@ -148,6 +148,9 @@
+     },
+     "hqplayer":{
+         "svg":"hqplayer"
++    },
++    "platinbridge":{
++        "svg":"platin"
+     }
+ }
+ 

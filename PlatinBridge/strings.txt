@@ -1,0 +1,56 @@
+PLUGIN_PLATIN_BRIDGE
+	EN	Platin Hub Bridge
+
+PLUGIN_PLATIN_BRIDGE_DESC
+	EN	Presents the Platin Stereo Hub HT as an ordinary Lyrion player over UPnP. It offers Lyrion the formats the Hub plays and passes the audio through untouched, so DSP, upsampling and ReplayGain are left to SqueezeDSP. The player's power button switches the Hub on and off, and the Hub's own remote and power are followed in Lyrion. Bespoke to one renderer: it is not a general UPnP bridge.
+
+PLUGIN_PLATIN_STATUS
+	EN	Renderer
+
+PLUGIN_PLATIN_STATUS_DESC
+	EN	What the Hub reported about itself when it was last contacted. Nothing here needs setting: the Hub is found on the network, and the audio is shaped by Lyrion's own transcoding and SqueezeDSP.
+
+PLUGIN_PLATIN_NOTFOUND
+	EN	No Platin Hub has answered yet. Discovery repeats, so this fills in once the Hub is reachable on the network.
+
+PLUGIN_PLATIN_CONNECTED
+	EN	Connected
+
+PLUGIN_PLATIN_DISCONNECTED
+	EN	Not reachable
+
+PLUGIN_PLATIN_ADDRESS
+	EN	Address
+
+PLUGIN_PLATIN_STATE
+	EN	State
+
+PLUGIN_PLATIN_POWER
+	EN	Hub power
+
+PLUGIN_PLATIN_NOCONTROL
+	EN	Not connected to the Hub's control port
+
+PLUGIN_PLATIN_ON
+	EN	On
+
+PLUGIN_PLATIN_OFF
+	EN	Off
+
+PLUGIN_PLATIN_GAPLESS
+	EN	Gapless supported
+
+PLUGIN_PLATIN_VOLRANGE
+	EN	Volume range
+
+PLUGIN_PLATIN_FORMATS
+	EN	Formats offered to Lyrion
+
+PLUGIN_PLATIN_UPTO
+	EN	up to
+
+PLUGIN_PLATIN_YES
+	EN	Yes
+
+PLUGIN_PLATIN_NO
+	EN	No
