@@ -1,51 +1,73 @@
-# Platin Hub Bridge for Lyrion Music Server
+# Platin Hub Bridge — LMS Plugin
 
-Presents the **Platin Stereo Hub HT** to Lyrion as an ordinary player, over UPnP
-AVTransport, and applies ReplayGain on the way out because the Hub cannot.
+A plugin for **Lyrion Music Server** that presents the **Platin Stereo Hub HT** as a native LMS player. Play to it, pause, seek and set its volume from Material or any control point; switch the Hub on and off with the player's power button; and use the Hub's own remote, with LMS following along.
 
-**Bespoke to one renderer.** This is not a general UPnP bridge and will not be
-made into one.
+It talks to the Hub over UPnP for playback and over the Hub's own control port for power and input. **It carries no audio stage of its own**: it offers LMS the formats the Hub plays and passes the audio through untouched. For DSP, upsampling or ReplayGain, use [SqueezeDSP](https://github.com/Foxenfurter/SqueezeDSP) on the player.
 
-## Why it exists
+**Bespoke to one renderer.** This is not a general UPnP bridge and will not be made into one. It is built around one rule: **nothing the Hub reports can ever start LMS playing**. Switching the Hub off, putting it in standby or changing its input never wakes the music up.
 
-The generic UPnP bridge misreads renderer state: powering the Hub down makes
-Lyrion start playing, which switches the unit back on. The rule this plugin is
-built around is that **nothing the Hub reports may ever start Lyrion playing**,
-and a Hub that stops answering has *no opinion* — it is never read as "stopped".
+---
 
-## What it does to the audio
+## Features
 
-Lyrion decodes, the plugin applies gain, the Hub plays. No external binary, no
-subprocess, no new decoder — the player declares `pcm`, so Lyrion's existing
-transcode table decodes every source with the binaries it already ships, and the
-only stage added is one multiply per sample.
+| Feature | What it gives you | Needs |
+|---|---|---|
+| **Appears as a real player** | Each Platin Hub on the network gets its own LMS player, named as the Hub names itself | Nothing |
+| **Found automatically** | Discovered on the network, with nothing to configure | The Hub reachable from the server by multicast |
+| **Stable player identity** | The Hub mints a new UPnP identity on every reboot; the player, its settings and its playlist stay the same | Nothing |
+| **Untouched audio** | LMS sends each track in a format the Hub lists as playable, and the bytes reach the Hub as LMS produced them | Nothing |
+| **Gapless** | The next track is handed to the Hub before the current one ends | Nothing |
+| **Power button** | LMS's power button switches the Hub on and off | Nothing |
+| **Off means off** | Powering off in LMS switches the Hub off only while it is on its Streaming input, so a Hub playing the TV is left alone | Nothing |
+| **The Hub's remote** | Power, play/pause and volume from the remote or the app are followed in LMS; switching the Hub to another input pauses LMS | Nothing |
+| **On is never play** | Switching the Hub on powers the LMS player on without starting playback | Nothing |
+| **Mute** | Mute in LMS mutes the Hub | Nothing |
+| **Track length on the Hub** | The Hub's display shows each track's length | Nothing |
+| **Status page** | Settings → Plugins → Platin Hub Bridge shows each Hub's address, connection, power, input and the formats offered to LMS | Nothing |
 
-ReplayGain has to be the plugin's job because **Lyrion never applies it**:
-`canDoReplayGain` returns 0 for any non-Squeezebox player, so the figure Lyrion
-computes is stored and never read.
-
-* The figure is **clamped to ≤ 0 dB** — attenuate only, never boost. That is not
-  a limiter; it removes the need for one, since a multiplier of at most 1.0
-  cannot increase a sample's magnitude and so cannot clip.
-* **Depth rule:** gain applied → 24-bit; no gain and a lossless source → its
-  native depth, untouched; no gain and a lossy source → 24-bit.
-
-## Gapless
-
-Decided from what the device itself advertises, not from a setting. If the Hub
-lists `SetNextAVTransportURI`, tracks are pre-armed per-track. If it does not,
-the plugin uses **Flow mode** — consecutive tracks are joined into one continuous
-stream, so gapless does not depend on the renderer at all.
-
-A stream's format is fixed once it starts, so the flow breaks on any change of
-sample rate, bit depth or channel count. Within an album that costs nothing.
+---
 
 ## Requirements
 
-* Lyrion Music Server 8.0+
-* A Platin Stereo Hub HT reachable by SSDP
-* `lame` on the server, for the mp3 → pcm rule the plugin supplies (Lyrion ships
-  no such rule of its own, because Squeezeboxes decode MP3 in hardware)
+- **Lyrion Music Server 8.0+**.
+- A **Platin Stereo Hub HT** on the same network as the server, reachable by multicast (SSDP) and on TCP port 50006, its control port.
+- **If you use the UPnP Bridge plugin**, disable the Hub in it. Otherwise LMS shows two players with the Hub's name, both driving the one Hub.
+
+---
+
+## Installation
+
+**Via repository (recommended).** In LMS go to **Settings → Plugins → Additional Repositories** and add:
+
+```
+https://simonarnold002.github.io/LMS-Platin-Bridge/repo.xml
+```
+
+Install **Platin Hub Bridge** from the plugin list and restart LMS. The Hub appears in Material's player list under its own name. Select it and play something.
+
+**Manual.** Download `PlatinBridge.zip` from the [repository](https://github.com/SimonArnold002/LMS-Platin-Bridge) and unzip it so it sits as `Plugins/PlatinBridge/`:
+
+```bash
+sudo rm -rf /var/lib/squeezeboxserver/Plugins/PlatinBridge
+sudo unzip PlatinBridge.zip -d /var/lib/squeezeboxserver/Plugins/
+```
+
+Then restart LMS.
+
+---
+
+## Using SqueezeDSP with it
+
+The player carries no DSP, upsampling or ReplayGain of its own: LMS never applies ReplayGain for a non-Squeezebox player. Turn SqueezeDSP on for the Hub's player to get them. **FLAC** is the recommended SqueezeDSP output for the Hub.
+
+---
+
+## Known limits
+
+- **The remote's skip and back buttons do nothing** while LMS is playing. The Hub does not report them for UPnP playback. Skip from LMS instead.
+- **Up to 96 kHz.** LMS sends the Hub at most 96 kHz; a higher-rate source is converted down on the way.
+
+---
 
 ## Testing
 
@@ -53,7 +75,10 @@ sample rate, bit depth or channel count. Within an album that costs nothing.
 sh tools/run_checks.sh
 ```
 
-Syntax-checks every module against a stub `Slim/` tree, runs the unit suites, and
-sweeps for calls to subs that do not exist — which `perl -c` will not catch.
-`Gain.pm` has no `Slim::` dependencies, so its suite exercises the real audio
-stage rather than a stub of it.
+Syntax-checks every module against a stub `Slim/` tree, runs the unit suites, and sweeps for calls to subs that do not exist, which `perl -c` will not catch.
+
+---
+
+## License
+
+MIT. See [LICENSE](LICENSE).
