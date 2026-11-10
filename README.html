@@ -114,9 +114,9 @@
 
 <header class="hero">
   <h1>Platin Hub Bridge — LMS Plugin</h1>
-  <p class="tagline">A plugin for <strong>Lyrion Music Server</strong> that presents the <strong>Platin Stereo Hub HT</strong> as a native LMS player. Play to it, pause, seek and set its volume from Material or any control point; switch the Hub on and off with the player's power button; and use the Hub's own remote, with LMS following along.</p>
+  <p class="tagline">A plugin for <strong>Lyrion Music Server</strong> that makes the <strong>Platin Stereo Hub HT</strong> a native LMS player.</p>
   <div class="badges">
-    <span class="badge accent">v0.2.10</span>
+    <span class="badge accent">v0.2.11</span>
     <span class="badge">LMS 8.0.0+</span>
     <span class="badge">Platin Stereo Hub HT</span>
     <span class="badge">Bit-perfect passthrough</span>
@@ -131,56 +131,32 @@
 <section id="features">
 <h2>Features</h2>
 <div class="feature-cards">
-<div class="card"><h4>Appears as a real player</h4><p>Each Platin Hub on the network gets its own LMS player, named as the Hub names itself</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Found automatically</h4><p>Discovered on the network, with nothing to configure</p><span class="needs">Needs: The Hub reachable from the server by multicast</span></div>
-<div class="card"><h4>Stable player identity</h4><p>The Hub mints a new UPnP identity on every reboot; the player, its settings and its playlist stay the same</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Untouched audio</h4><p>LMS sends each track in a format the Hub lists as playable, and the bytes reach the Hub as LMS produced them</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Gapless</h4><p>The next track is handed to the Hub before the current one ends</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Power button</h4><p>LMS's power button switches the Hub on and off</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Off means off</h4><p>Powering off in LMS switches the Hub off only while it is on its Streaming input, so a Hub playing the TV is left alone</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>The Hub's remote</h4><p>Power, play/pause and volume from the remote or the app are followed in LMS; switching the Hub to another input pauses LMS</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>On is never play</h4><p>Switching the Hub on powers the LMS player on without starting playback</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Mute</h4><p>Mute in LMS mutes the Hub</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Track length on the Hub</h4><p>The Hub's display shows each track's length</p><span class="needs">Needs: nothing</span></div>
-<div class="card"><h4>Status page</h4><p>Settings → Plugins → Platin Hub Bridge shows each Hub's address, connection, power, input and the formats offered to LMS</p><span class="needs">Needs: nothing</span></div>
+<div class="card"><h4>Native player</h4><p>Each Platin Hub on your network appears in LMS as a player, found automatically</p></div>
+<div class="card"><h4>Bit-perfect</h4><p>Plays in the formats the Hub supports, passed through untouched</p></div>
+<div class="card"><h4>Gapless</h4><p>Albums play without gaps between tracks</p></div>
+<div class="card"><h4>Power button</h4><p>Switch the Hub on and off from LMS</p></div>
+<div class="card"><h4>Remote control</h4><p>Power, play/pause and volume from the Hub's remote or app show in LMS</p></div>
+<div class="card"><h4>Mute</h4><p>Mute in LMS mutes the Hub</p></div>
+<div class="card"><h4>Track length</h4><p>The Hub's display shows each track's length</p></div>
+<div class="card"><h4>SqueezeDSP</h4><p>Add DSP and upsampling with SqueezeDSP</p></div>
+<div class="card"><h4>Status page</h4><p>The Hub's connection, power, input and formats, under Settings → Plugins</p></div>
 </div>
 </section>
 <section id="requirements">
 <h2>Requirements</h2>
 <ul>
-<li><strong>Lyrion Music Server 8.0+</strong>.
+<li>Lyrion Music Server 8.0+
 </li>
-<li>A <strong>Platin Stereo Hub HT</strong> on the same network as the server, reachable by multicast (SSDP) and on TCP port 50006, its control port.
+<li>A Platin Stereo Hub HT on the same network
 </li>
-<li><strong>If you use the UPnP Bridge plugin</strong>, disable the Hub in it. Otherwise LMS shows two players with the Hub's name, both driving the one Hub.
+<li>If you use the UPnP Bridge plugin, disable the Hub there
 </li></ul>
 </section>
 <section id="installation">
 <h2>Installation</h2>
-<p><strong>Via repository (recommended).</strong> In LMS go to <strong>Settings → Plugins → Additional Repositories</strong> and add:</p>
+<p>In LMS go to <strong>Settings → Plugins → Additional Repositories</strong> and add:</p>
 <pre><code>https://simonarnold002.github.io/LMS-Platin-Bridge/repo.xml</code></pre>
-<p>Install <strong>Platin Hub Bridge</strong> from the plugin list and restart LMS. The Hub appears in Material's player list under its own name. Select it and play something.</p>
-<p><strong>Manual.</strong> Download <code>PlatinBridge.zip</code> from the <a href="https://github.com/SimonArnold002/LMS-Platin-Bridge">repository</a> and unzip it so it sits as <code>Plugins/PlatinBridge/</code>:</p>
-<pre><code>sudo rm -rf /var/lib/squeezeboxserver/Plugins/PlatinBridge
-sudo unzip PlatinBridge.zip -d /var/lib/squeezeboxserver/Plugins/</code></pre>
-<p>Then restart LMS.</p>
-</section>
-<section id="using-squeezedsp-with-it">
-<h2>Using SqueezeDSP with it</h2>
-<p>The player carries no DSP, upsampling or ReplayGain of its own: LMS never applies ReplayGain for a non-Squeezebox player. Turn SqueezeDSP on for the Hub's player to get them. <strong>FLAC</strong> is the recommended SqueezeDSP output for the Hub.</p>
-</section>
-<section id="known-limits">
-<h2>Known limits</h2>
-<ul>
-<li><strong>The remote's skip and back buttons do nothing</strong> while LMS is playing. The Hub does not report them for UPnP playback. Skip from LMS instead.
-</li>
-<li><strong>Up to 96 kHz.</strong> LMS sends the Hub at most 96 kHz; a higher-rate source is converted down on the way.
-</li></ul>
-</section>
-<section id="testing">
-<h2>Testing</h2>
-<pre><code>sh tools/run_checks.sh</code></pre>
-<p>Syntax-checks every module against a stub <code>Slim/</code> tree, runs the unit suites, and sweeps for calls to subs that do not exist, which <code>perl -c</code> will not catch.</p>
+<p>Install <strong>Platin Hub Bridge</strong> and restart LMS. The Hub appears in the player list under its own name.</p>
 </section>
 <section id="license">
 <h2>License</h2>

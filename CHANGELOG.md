@@ -4,6 +4,17 @@ All notable changes to **Platin Hub Bridge** are recorded here. This file record
 what users receive: one entry per release published to `main`. Per-version
 development notes live in `CLAUDE.md`.
 
+## 0.2.11 — 2026-11-10
+
+### Security
+
+- **Discovery only follows a device to its own address.** Any device on the
+  network could answer the plugin's search with a description address pointing
+  elsewhere, making the Lyrion host fetch from, and send control messages to,
+  any host. A reply whose description address is not the host that sent it is
+  now ignored, as are a base address or service addresses in a description that
+  name a different host.
+
 ## 0.2.10 — 2026-11-07
 
 First release. The Platin Stereo Hub HT as a native Lyrion player: playback

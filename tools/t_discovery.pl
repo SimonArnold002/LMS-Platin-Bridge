@@ -96,6 +96,22 @@ is( $parseHeaders->(undef), undef, 'undef parses to nothing' );
 }
 
 # ---------------------------------------------------------------------------
+print "-- a LOCATION is followed only to the host that answered --\n";
+
+{
+    my $from = \&Plugins::PlatinBridge::Discovery::locationIsFrom;
+
+    ok( $from->( 'http://10.0.0.9:49152/description.xml', '10.0.0.9' ), 'LOCATION on the answering host is accepted' );
+    ok( $from->( 'http://10.0.0.9/d.xml', '10.0.0.9' ), 'with no port' );
+    ok( !$from->( 'http://10.0.0.50:80/d.xml', '10.0.0.9' ), 'another LAN host is refused' );
+    ok( !$from->( 'http://127.0.0.1:9000/d.xml', '10.0.0.9' ), 'loopback is refused' );
+    ok( !$from->( 'http://10.0.0.9@10.0.0.50/d.xml', '10.0.0.9' ), 'userinfo cannot dress up another host' );
+    ok( !$from->( 'http://10.0.0.9.evil.example/d.xml', '10.0.0.9' ), 'a longer hostname is refused' );
+    ok( !$from->( 'ftp://10.0.0.9/d.xml', '10.0.0.9' ), 'a non-http scheme is refused' );
+    ok( !$from->( undef, '10.0.0.9' ), 'no LOCATION is refused' );
+}
+
+# ---------------------------------------------------------------------------
 print "-- the UDN is the identity --\n";
 
 is( $udnFromUSN->('uuid:5f9ec1b3-ed59-79ee-4530-0005cdaabbcc::urn:schemas-upnp-org:device:MediaRenderer:1'),
