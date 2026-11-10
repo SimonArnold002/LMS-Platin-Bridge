@@ -45,7 +45,7 @@ use Plugins::PlatinBridge::UPnP;
 
 # Bumped with install.xml. Reported by `platinbridge info` so the RUNNING
 # version can be read back, which install.xml cannot tell you.
-use constant VERSION => '0.2.10';
+use constant VERSION => '0.2.11';
 
 my $prefs = preferences('plugin.platinbridge');
 

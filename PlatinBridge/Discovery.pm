@@ -263,7 +263,16 @@ sub _reply {
     return unless ( $h->{_status} || '' ) =~ m{^HTTP/1\.[01]\s+200};
 
     my $location = $h->{location} or return;
-    my $udn      = udnFromUSN( $h->{usn} );
+
+    # Anyone on the LAN can answer an M-SEARCH, and the LOCATION is fetched from
+    # the LMS host. A renderer describes itself at its own address, so a LOCATION
+    # naming any other host is not followed.
+    if ( !locationIsFrom( $location, $ip ) ) {
+        main::INFOLOG && $log->is_info && $log->info("discovery: $ip gave a LOCATION on another host ($location) - ignored");
+        return;
+    }
+
+    my $udn = udnFromUSN( $h->{usn} );
 
     if ( !$udn ) {
         main::DEBUGLOG && $log->is_debug && $log->debug("discovery: $ip answered with no usable USN - ignored");
@@ -301,6 +310,17 @@ sub _reply {
     $onChange->( devices(), 1 ) if $onChange;
 
     return;
+}
+
+# True when an http(s) LOCATION url names exactly the address the reply came from.
+# A url with userinfo, a hostname or an IPv6 literal does not match.
+sub locationIsFrom {
+    my ( $location, $ip ) = @_;
+
+    return 0 unless defined $location && defined $ip;
+    my ($host) = $location =~ m{^https?://([^/\@?#:\s]+)(?::\d+)?(?:[/?#]|$)}i or return 0;
+
+    return $host eq $ip ? 1 : 0;
 }
 
 sub _roundDone {

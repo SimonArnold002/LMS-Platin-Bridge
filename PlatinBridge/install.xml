@@ -2,7 +2,7 @@
 <extension>
     <name>PLUGIN_PLATIN_BRIDGE</name>
     <module>Plugins::PlatinBridge::Plugin</module>
-    <version>0.2.10</version>
+    <version>0.2.11</version>
     <description>PLUGIN_PLATIN_BRIDGE_DESC</description>
     <creator>CrystalGipsy</creator>
     <email></email>

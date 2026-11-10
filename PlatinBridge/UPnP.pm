@@ -276,13 +276,26 @@ sub _onDescription {
 sub _baseFrom {
     my ( $self, $urlbase, $location ) = @_;
 
+    # A <URLBase> on another host than the one that served the description is
+    # ignored: it would redirect every service url, and the SOAP bodies, there.
     for my $u ( $urlbase, $location ) {
         next unless $u;
         if ( my ($b) = $u =~ m{^(https?://[^/]+)} ) {
+            next if $u eq ( $urlbase || '' ) && $location && _hostOf($b) ne _hostOf($location);
             return $b;
         }
     }
     return '';
+}
+
+# The lower-cased host of an http(s) url, '' when it has none.
+sub _hostOf {
+    my ($url) = @_;
+
+    return '' unless defined $url;
+    my ($host) = $url =~ m{^https?://(?:[^/\@?#]*\@)?([^/\@?#:]+)}i;
+
+    return defined $host ? lc $host : '';
 }
 
 # Resolve a controlURL/eventSubURL/SCPDURL against the base. Devices publish all
@@ -291,9 +304,14 @@ sub _absolute {
     my ( $self, $path ) = @_;
 
     return undef unless defined $path && $path ne '';
-    return $path if $path =~ m{^https?://}i;
 
     my $base = $self->{base} || '';
+
+    # An absolute url is followed only to the host the description came from.
+    if ( $path =~ m{^https?://}i ) {
+        return ( $base && $path !~ m{^https?://[^/?#]*\@} && _hostOf($path) eq _hostOf($base) ) ? $path : undef;
+    }
+
     return $path =~ m{^/} ? $base . $path : $base . '/' . $path;
 }
 

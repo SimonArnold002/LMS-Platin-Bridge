@@ -412,7 +412,11 @@ From `platinbridge info`, LMS `status` and `server.log?lines=20000` (read over H
 
 ## The icon (2026-10-25, Simon's logo, version C)
 
-Simon supplied Platin's C-and-slash mark; he submits the Material PR himself.
+Simon supplied Platin's C-and-slash mark. **Material PR #1298 OPENED 2026-11-02**
+(Simon asked for it): branch `platin-player-icon` on our fork `SimonArnold002/lms-material`,
+one commit `d0873bb2c` on upstream master `ccb227d14` = this kit's svg + json entry
+verbatim, `_svgHandler` re-simulated against upstream's code first. **MERGED by Craig
+2026-11-02 14:58 UTC** (upstream `c4e654372`); ships with the next Material release.
 ONE svg serves both places: the plugin's `PlatinBridgeIcon.svg` and Material's
 `images/platin.svg`, byte-identical. Material picks a PLAYER icon by `model`
 (`platinbridge`), never by the player's name ("Lounge", user-chosen).
@@ -485,13 +489,28 @@ stop an adoption" is pinned by its own test (a dying `keepRemembered`). The stub
 
 Work happens on **`dev`**. `main` is the release branch, and the two differ only
 in `repo.xml`'s `<url>`. Nothing is committed, tagged or pushed without Simon
-saying so. **First pushed 2026-11-01** (Simon: "lets push this dev"): `main` is ONE
+saying so. **FIRST RELEASE 2026-11-07, 0.2.10** (Simon: "lets merge to main"): docs
+commit `d6208b5` on dev (CHANGELOG.md created, README.md rewritten for 0.2.x - the old
+one described the 0.1.x gain/Flow stage - and `tools/make_readme_html.py`, the fleet
+generator, emitting README.html + index.html), merged `--no-ff` into main as `536d5b1`
+with main's `<url>` = `https://simonarnold002.github.io/LMS-Platin-Bridge/PlatinBridge.zip`;
+tag `v0.2.10`; main + tag pushed. Same zip, same sha (`a358661c...`), no rebuild.
+**GitHub Pages was NOT enabled** when main was pushed (the site 404'd), so main's
+`<url>` and the `.../repo.xml` repository URL in the README work only once Pages is on
+(main, root). **First pushed 2026-11-01** (Simon: "lets push this dev"): `main` is ONE
 commit holding `.gitignore` only (GitHub needed a file on `main` before `dev` could
 branch from it); `dev` is 0.2.10 on top of it. `.gitignore` had `Plugins/` (for the
 runner's `tools/Plugins/`), which git on macOS (case-insensitive) also matched against
 `PlatinBridge/HTML/EN/plugins/` - the settings page and icon would never have been
 committed; it is `/tools/Plugins/` now. `PlatinBridge.zip` at
-the repo root is the **0.2.10 test build** (sha `a358661c...` in `repo.xml`), built
+the repo root is the **0.2.11 test build** (2026-11-10, sha `f1894b41...`, the same 23
+entries, unzip-diffed): 0.2.10 plus a security-review fix - a spoofed SSDP reply could make
+the LMS host GET and SOAP-POST to any host (`SSDP LOCATION IS FOLLOWED ONLY TO THE HOST
+THAT ANSWERED`): `Discovery::locationIsFrom` drops a reply whose LOCATION host is not its
+UDP source IP, `UPnP::_baseFrom` ignores a URLBase on another host, `UPnP::_absolute` drops
+an absolute service url on another host; `CACHE_GEN` unchanged (15). `_reply`'s call is
+not unit-testable offline (the socket half). 0.2.10's zip is in `attic/0.2.10/`. The
+**0.2.10 test build** (sha `a358661c...` in `repo.xml`), built
 2026-11-01, INSTALLED by Simon (LMS start 18:57:49) and VERIFIED LIVE (live check
 000000): 0.2.9 plus the review round's two fixes (`THE BRAND GATE IS
 FOR A PROBE`, `A PROBE IS KNOWN BY ITS UDN`), `CACHE_GEN` 15; unzip-diffed (the same 23

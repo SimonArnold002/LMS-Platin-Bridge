@@ -352,6 +352,18 @@ print "-- description parsing --\n";
 }
 
 {
+    # A description is trusted only for its own host: a service url or URLBase on
+    # another host would send the SOAP bodies there.
+    my ( $u ) = described( urlbase => 'http://10.0.0.66:8080/', gapless => 1 );
+    is( $u->{base}, 'http://10.0.0.9:49152', 'a URLBase on another host is ignored' );
+    is( $u->{svc}{av}{control}, 'http://10.0.0.9:49152/upnp/control/AVTransport1',
+        'so the service urls stay on the description host' );
+    is( $u->_absolute('http://10.0.0.66/x'), undef, 'an absolute url on another host is dropped' );
+    is( $u->_absolute('http://10.0.0.9@10.0.0.66/x'), undef, 'userinfo does not disguise another host' );
+    is( $u->_absolute('http://10.0.0.9:1234/x'), 'http://10.0.0.9:1234/x', 'a different port on the same host is kept' );
+}
+
+{
     # A <URLBase> must win over the location url - devices populate one or the
     # other and a bridge that only ever reads the location gets it wrong.
     my ( $u ) = described( urlbase => 'http://10.0.0.9:8080/', gapless => 1 );
